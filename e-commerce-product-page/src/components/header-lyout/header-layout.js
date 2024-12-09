@@ -1,13 +1,37 @@
 import { LitElement, html } from "lit";
-
 import { headerStyles } from "../../styles/header-layout-styles";
 
 class HeaderLayout extends LitElement {
   static styles = [headerStyles];
+
+  constructor() {
+    super();
+    this.currentLink = "Collections";
+  }
+
+  renderLink(link) {
+    const isActive = this.currentLink === link;
+    return html`
+      <li class="link ${isActive ? "active" : ""}">
+        <a href="#" @click=${this.handleLinkClick}>${link}</a>
+      </li>
+    `;
+  }
+
+  handleLinkClick = (event) => {
+    event.preventDefault();
+    const clickedLink = event.target.textContent;
+    if (this.currentLink !== clickedLink) {
+      this.currentLink = clickedLink;
+      this.requestUpdate();
+    }
+  };
+
   render() {
+    const links = ["Collections", "Men", "Women", "About", "Contact"];
     return html`
       <div class="header">
-        <ul class="navigation">
+        <div class="navigation">
           <a href="#">
             <img
               class="logo-icon"
@@ -16,13 +40,9 @@ class HeaderLayout extends LitElement {
             />
           </a>
           <ul class="links">
-            <li><a href="#">Collections</a></li>
-            <li><a href="#">Men</a></li>
-            <li><a href="#">Women</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            ${links.map(link => this.renderLink(link))}
           </ul>
-        </ul>
+        </div>
         <div class="status">
           <a href="#">
             <img
